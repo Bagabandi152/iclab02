@@ -13,7 +13,7 @@ public class Server {
     int clientCount = 0;
 
     public static void main(String[] args) throws IOException {
-        Server sObject = new Server(5000);
+        Server sObject = new Server(6666);
         sObject.startServer();
     }
 
