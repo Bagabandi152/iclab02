@@ -24,8 +24,8 @@ public class Server {
 
     public void startServer() throws IOException {
         ss = new ServerSocket(pt);
-        System.out.println("ServerSocket Started....");
-        System.out.println("To break the connection send BYE....");
+        System.out.println("Server aslaa...");
+        System.out.println("'Bayartai' gj ilgeeh uyd holbolt salna...");
         while (true) {
             socket = ss.accept();
             clientCount++;
@@ -49,7 +49,7 @@ public class Server {
             this.client = client;
             this.server = server;
             this.id = count;
-            System.out.println("Connection established with client " + id);
+            System.out.println(id + " client holbogdloo.");
 
             s1 = new BufferedReader(new InputStreamReader(client.getInputStream()));
             s2 = new PrintStream(client.getOutputStream());
@@ -64,12 +64,12 @@ public class Server {
                     s = s1.readLine();
 
                     System.out.print("Client(" + id + ") : " + s + "\n");
-                    System.out.print("ServerSocket : ");
+                    System.out.print("Server: ");
                     s = sc.nextLine();
-                    if (s.equalsIgnoreCase("bye")) {
-                        s2.println("BYE");
+                    if (s.equalsIgnoreCase("Bayartai")) {
+                        s2.println("Bayartai");
                         x = 0;
-                        System.out.println("Connection Ended....");
+                        System.out.println("Holbolt sallaa...");
                         break;
                     }
                     s2.println(s);
@@ -79,11 +79,10 @@ public class Server {
                 client.close();
                 s2.close();
                 if (x == 0) {
-                    System.out.println("*****Closing*****");
                     System.exit(0);
                 }
             } catch (IOException e) {
-                System.out.println("Error : " + e);
+                System.out.println("Aldaa : " + e);
             }
         }
     }
