@@ -13,7 +13,7 @@ public class Server {
     int clientCount = 0;
 
     public static void main(String[] args) throws IOException {
-        Server sObject = new Server(6666);
+        Server sObject = new Server(8888);
         sObject.startServer();
     }
 
@@ -23,8 +23,7 @@ public class Server {
     }
 
     public void startServer() throws IOException {
-
-        ss = new ServerSocket(5000);
+        ss = new ServerSocket(pt);
         System.out.println("ServerSocket Started....");
         System.out.println("To break the connection send BYE....");
         while (true) {
@@ -33,7 +32,6 @@ public class Server {
             ServerThread st = new ServerThread(socket, clientCount, this);
             es.execute(st);
         }
-
     }
 
     private static class ServerThread implements Runnable {
