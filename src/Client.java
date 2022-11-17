@@ -3,7 +3,7 @@ import java.net.*;
 
 public class Client {
     public static void main(String args[]) throws Exception {
-        Socket socket = new Socket("10.3.131.104", 8888);
+        Socket socket = new Socket("localhost", 8888);
         BufferedReader inputVar = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         PrintStream outVar = new PrintStream(socket.getOutputStream());
         BufferedReader stdin = new BufferedReader(new InputStreamReader(System.in));

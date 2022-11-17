@@ -45,7 +45,6 @@ public class Server {
         String s;
 
         ServerThread(Socket client, int count, Server server) throws IOException {
-
             this.client = client;
             this.server = server;
             this.id = count;
@@ -53,7 +52,6 @@ public class Server {
 
             s1 = new BufferedReader(new InputStreamReader(client.getInputStream()));
             s2 = new PrintStream(client.getOutputStream());
-
         }
 
         @Override
@@ -62,7 +60,6 @@ public class Server {
             try {
                 while (true) {
                     s = s1.readLine();
-
                     System.out.print("Client(" + id + ") : " + s + "\n");
                     System.out.print("Server: ");
                     s = sc.nextLine();
