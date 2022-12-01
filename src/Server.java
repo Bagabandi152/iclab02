@@ -29,6 +29,11 @@ public class Server {
                             msg = stdin.readLine();
                             out.println(msg);
                             out.flush();
+                            if (msg.equalsIgnoreCase("close")) {
+                                System.out.println("Connection has broken...");
+                                out.close();
+                                break;
+                            }
                         }
                     } catch (IOException e) {
                         e.printStackTrace();

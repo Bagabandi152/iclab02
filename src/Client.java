@@ -36,6 +36,7 @@ public class Client {
                 }
             });
             sender.start();
+
             Thread receiver = new Thread(new Runnable() {
                 String msg;
 
@@ -44,7 +45,7 @@ public class Client {
                     try {
                         msg = in.readLine();
                         while (msg != null) {
-                            System.out.println("Server : " + msg + "\n");
+                            System.out.println("Server : " + msg);
                             msg = in.readLine();
                         }
                         System.out.println("Server out of service");
