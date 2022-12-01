@@ -2,85 +2,68 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Scanner;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 public class Server {
-    int pt;
-    ServerSocket ss = null;
-    Socket socket = null;
-    ExecutorService es = null;
-    int clientCount = 0;
+    ServerSocket serverSocket;
+    Socket socket;
+    BufferedReader in, stdin;
+    PrintStream out;
 
-    public static void main(String[] args) throws IOException {
-        Server sObject = new Server(8888);
-        sObject.startServer();
-    }
+    Server() {
+        try {
+            System.out.println("Server started...");
+            serverSocket = new ServerSocket(8888);
+            socket = serverSocket.accept();
+            out = new PrintStream(socket.getOutputStream());
+            in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            stdin = new BufferedReader(new InputStreamReader(System.in));
 
-    Server(int pt) {
-        this.pt = pt;
-        es = Executors.newFixedThreadPool(5);
-    }
+            Thread sender = new Thread(new Runnable() {
+                String msg;
 
-    public void startServer() throws IOException {
-        ss = new ServerSocket(pt);
-        System.out.println("Server aslaa...");
-        System.out.println("'Bayartai' gj ilgeeh uyd holbolt salna...");
-        while (true) {
-            socket = ss.accept();
-            clientCount++;
-            ServerThread st = new ServerThread(socket, clientCount, this);
-            es.execute(st);
-        }
-    }
-
-    private static class ServerThread implements Runnable {
-
-        Server server = null;
-        Socket client = null;
-        BufferedReader s1;
-        PrintStream s2;
-        Scanner sc = new Scanner(System.in);
-        int id;
-        String s;
-
-        ServerThread(Socket client, int count, Server server) throws IOException {
-            this.client = client;
-            this.server = server;
-            this.id = count;
-            System.out.println(id + " client holbogdloo.");
-
-            s1 = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            s2 = new PrintStream(client.getOutputStream());
-        }
-
-        @Override
-        public void run() {
-            int x = 1;
-            try {
-                while (true) {
-                    s = s1.readLine();
-                    System.out.print("Client(" + id + ") : " + s + "\n");
-                    System.out.print("Server: ");
-                    s = sc.nextLine();
-                    if (s.equalsIgnoreCase("Bayartai")) {
-                        s2.println("Bayartai");
-                        x = 0;
-                        System.out.println("Holbolt sallaa...");
-                        break;
+                @Override
+                public void run() {
+                    try {
+                        while (true) {
+                            System.out.print("Server: ");
+                            msg = stdin.readLine();
+                            out.println(msg);
+                            out.flush();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                    s2.println(s);
                 }
+            });
+            sender.start();
 
-                s1.close();
-                client.close();
-                s2.close();
-                if (x == 0) {
-                    System.exit(0);
+            Thread receive = new Thread(new Runnable() {
+                String msg;
+
+                @Override
+                public void run() {
+                    try {
+                        System.out.println("Client connected");
+                        msg = in.readLine();
+                        while (msg != null) {
+                            System.out.println("Client : " + msg);
+                            msg = in.readLine();
+                        }
+                        out.close();
+                        socket.close();
+                        serverSocket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
-            } catch (IOException e) {
-                System.out.println("Aldaa : " + e);
-            }
+            });
+            receive.start();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+    }
+
+    public static void main(String[] args) {
+        new Server();
     }
 }
